@@ -27,5 +27,5 @@ using std::istream;
 
 	};
 
-
+bool unittest(void);
 #endif /* COMPLEX_H_ */
