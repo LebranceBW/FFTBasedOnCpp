@@ -6,14 +6,18 @@
  */
 
 #include "Complex.h"
+#include <cstdio>
 #include <iostream>
+#include <math.h>
 #include <bitset>
 using std::cout;
 using std::endl;
+using std::printf;
 using std::bitset;
 int main()
 {
 	const int SCALE = 16;
+	const double M_PI = 3.14159265358979323846;
 	const int SCALEBITS = 4; //定义规模与需要的比特数
 	Complex rawData[SCALE]={5,7,6,2,9,1,4,7,0,6,0,14,0,7,8,15};
 	int step = 1;//定义step作为单步步长，可以理解为每次蝶式运算时跨越的步长
@@ -35,8 +39,27 @@ int main()
 		else
 			cout<<"error occurred"<<" stack is"<<stack<<endl;
 		stack = 0;
-	}//倒序插入
+	}//FFT的倒序存入
 
+	for(;step<SCALE;step *= 2)//第一层循环，从左到右
+	{
+		cout<<"第"<<step<<"阶："<<endl;
+		for(int butterIndex = 0;butterIndex<SCALE;butterIndex +=step*2)//第二层循环，遍历每列的蝶式运算
+		{
+			cout<<"	第"<<butterIndex<<"只蝶"<<endl;
+			for(int wingIndex = 0;wingIndex<step;wingIndex++)//第三层循环，遍历每个蝴蝶的翅膀
+			{
+				Complex temp = butterflyBuffer[butterIndex+wingIndex];
+				double tempNumber =2* M_PI *wingIndex*(int)pow(2,SCALEBITS-step)/(double)SCALE;	//旋转因子W(k,N)
+				Complex factor(cos(tempNumber),-sin(tempNumber));
+				butterflyBuffer[butterIndex+wingIndex] = temp + factor*butterflyBuffer[butterIndex+wingIndex+step];
+				butterflyBuffer[butterIndex+wingIndex+step] = temp - factor*butterflyBuffer[butterIndex+wingIndex+step];
+				printf("		第%d只翼，完成的是X[%d]与X[%d]的蝶式运算,旋转因子是W%d\n",wingIndex,butterIndex+wingIndex,butterIndex+wingIndex+step,(int)(wingIndex*pow(2,SCALEBITS-step)));
+			}
+		}
+	}
+	for(auto x:butterflyBuffer)
+		cout<<x<<endl;
 	return 0;
 }
 
