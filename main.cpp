@@ -9,11 +9,9 @@
 #include <cstdio>
 #include <iostream>
 #include <math.h>
-#include <bitset>
 using std::cout;
 using std::endl;
 using std::printf;
-using std::bitset;
 int main()
 {
 	unittest();
@@ -53,7 +51,7 @@ int main()
 			for(int wingIndex = 0;wingIndex<step;wingIndex++)//第三层循环，遍历每个蝴蝶的翅膀
 			{
 				Complex temp = butterflyBuffer[butterIndex+wingIndex];
-				double tempNumber =2* M_PI *wingIndex*(int)pow(2,SCALEBITS-step)/(double)SCALE;	//旋转因子W(k,N)
+				double tempNumber =2* M_PI *wingIndex*(int)pow(2,SCALEBITS-step)/SCALE;	//旋转因子W(k,N)
 				Complex factor(cos(tempNumber),-sin(tempNumber));
 				butterflyBuffer[butterIndex+wingIndex] = temp + factor*butterflyBuffer[butterIndex+wingIndex+step];
 				butterflyBuffer[butterIndex+wingIndex+step] = temp - factor*butterflyBuffer[butterIndex+wingIndex+step];
