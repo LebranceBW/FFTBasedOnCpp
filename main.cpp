@@ -44,6 +44,8 @@ int main()
 	cout<<"蝶式运算"<<endl;
 	for(;step<SCALE;step *= 2)//第一层循环，从左到右
 	{
+		static int i = 0;
+		i++;
 		cout<<"第"<<step<<"阶："<<endl;
 		for(int butterIndex = 0;butterIndex<SCALE;butterIndex +=step*2)//第二层循环，遍历每列的蝶式运算
 		{
@@ -51,11 +53,11 @@ int main()
 			for(int wingIndex = 0;wingIndex<step;wingIndex++)//第三层循环，遍历每个蝴蝶的翅膀
 			{
 				Complex temp = butterflyBuffer[butterIndex+wingIndex];
-				double tempNumber =2* M_PI *wingIndex*(int)pow(2,SCALEBITS-step)/SCALE;	//旋转因子W(k,N)
+				double tempNumber =2* M_PI *wingIndex*pow(2,SCALEBITS-i)/SCALE;	//旋转因子W(k,N)
 				Complex factor(cos(tempNumber),-sin(tempNumber));
 				butterflyBuffer[butterIndex+wingIndex] = temp + factor*butterflyBuffer[butterIndex+wingIndex+step];
 				butterflyBuffer[butterIndex+wingIndex+step] = temp - factor*butterflyBuffer[butterIndex+wingIndex+step];
-				printf("		第%d只翼，完成的是X[%d]与X[%d]的蝶式运算,旋转因子是W%d\n",wingIndex,butterIndex+wingIndex,butterIndex+wingIndex+step,(int)(wingIndex*pow(2,SCALEBITS-step)));
+				printf("		第%d只翼，完成的是X[%d]与X[%d]的蝶式运算,旋转因子是W%d\n",wingIndex,butterIndex+wingIndex,butterIndex+wingIndex+step,(int)(wingIndex*pow(2,SCALEBITS-i)));
 			}
 		}
 	}
